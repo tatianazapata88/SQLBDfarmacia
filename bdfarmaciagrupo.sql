@@ -179,7 +179,7 @@ constraint apodoclienteve foreign key(cod_cliente2) references cliente(cod_clien
 constraint apodoprodventa foreign key(cod_producto3) references producto(cod_producto))
 drop table factura_venta
 insert into factura_venta values (1,1,'2020-11-09',1,1,1,1,2,1000,2000,0,0)
-
+insert into factura_venta values (2,2,'2020-11-11',1,2,1,1,2,1000,2000,0,0)
 select * from factura_venta
 
 --.tabla intermedia producto proveedor
@@ -216,4 +216,56 @@ select nombreproveedor from proveedor where cod_proveedor=1
 select nombre_producto, cod_cliente2, cantventa, precio_venta from producto, factura_venta where cod_producto=1
 
 --- cual es el nombre del cliente de la factura 1
-select nombrecliente from factura_venta, cliente where id_transaccionventa=1
+select nombrecliente, cod_cliente2 from cliente, factura_venta where id_transaccionventa=1 and cod_cliente=1
+
+------------------	FUNCIONES VISTAS EL 11 NOVIEMBRE 2020
+--- realizar consulta de proveedores que esten ubicados en medellin
+select * from proveedor where ciudad='Medellin'
+--- realizar un consulta de clientes que comience por la letra J
+select * from cliente where nombrecliente like 'J%'
+select * from cliente where nombrecliente like '%R'
+---Donde muestre un nombre en particular
+select * from cliente where nombrecliente like 'Juan Porras'
+--- Muestre en forma ascendente
+select * from cliente order by nombrecliente asc
+---Muestre en forma descendente
+select * from cliente order by nombrecliente desc
+
+---enpleo de la clausala count contar y agupar productos
+select * from producto
+select nombre_producto , count(nombre_producto) as cantidad from producto
+group by nombre_producto
+
+---quitando group by asi validamos que no trae informacion
+select nombre_producto , count(nombre_producto) as cantidad from producto
+--having para el filtro
+select nombre_producto , count(nombre_producto) as cantidad from producto
+group by nombre_producto having count(*)>1
+
+-- sumas valores de venta
+select * from factura_venta
+select sum(total_venta) as suma from factura_venta
+--- antes del between consultar los cliente y correoelectronico codigo 1 al 3 organizados por orden alfabetico nombre cliente
+select nombrecliente, email_cliente  from cliente
+where cod_cliente>= 1 and cod_cliente<=3 order by nombrecliente
+---con el between consultar los cliente y correoelectronico codigo 1 al 3 organizados por orden alfabetico nombre cliente
+select nombrecliente, email_cliente  from cliente
+where cod_cliente between 1 and 3 order by nombrecliente
+
+---para mostrar una información en partícular buscar productos que se llamen Acetaminofen
+select * from producto where(nombre_producto in('Acetaminofen'))
+--para no mostrar una información en partícular buscar productos que se llamen Acetaminofen
+select * from producto where(nombre_producto not in('Acetaminofen'))
+---Para mostrar un numero de registros
+select top 2 * from  factura_venta
+---distinc para eleminat repeticiones de los nombres de producto
+select distinct nombre_producto from producto order by nombre_producto
+select distinct nombre_producto from producto 
+---promedio avg
+select avg (total_venta) as promedio from factura_venta
+--- minimo 
+select min (precio_venta) from producto
+select max(precio_venta) from producto
+-- coloquemos un nombre de columnas
+select min (precio_venta) as valor_minimoproducto from producto
+select max(precio_venta) as valor_maximoproducto from producto
